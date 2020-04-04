@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    {{msg}}
+</div>
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+    var vm = new Vue({
+        el:"app",
+        data:{
+            msg:"hi vue",
+        },
+        //钩子函数
+        //实例初始化之后，在页面创建之前调用的生命周期
+        beforeCreate: function(){
+            console.log('beforeCreate');
+        },
+        //实例创建之后，属性、方法、watch event，挂载还没开始
+        created:function(){
+            console.log('created');
+        },
+        //挂载开始之前，准备挂载的一个状态
+        beforeMount:function () {
+            console.log('beforeMount');
+        },
+        //el被新的vm.$el替换，挂载成功
+        mounted:function () {
+            console.log('mounted');
+        },
+        //数据变化之前
+        beforeUpdate:function () {
+            console.log('beforeUpdate');
+        },
+        //数据已经更新完毕，dom 组件更新完毕
+        update:function(){
+            console.log('update');
+        }
+    });
+    setTimeout(function () {
+        vm.msg = "change ...";
+    },3000);
+</script>
+</body>
+</html>

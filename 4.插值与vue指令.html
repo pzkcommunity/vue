@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:width="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        .red{
+            background-color:red;
+        }
+        .blue{
+            background-color: blue;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!--v-text  是文本-->
+    <span v-text="name"></span> 非常帅 <br>
+    <!--v-html 是标签渲染，但不安全-->
+    <span v-html="name"></span>
+    {{msg}}  <!--不建议生产环境使用插值表达式，如果网速慢 会产生插值闪烁的情况，因为要先加载vue.js-->
+    <!--插值表达式不能用于属性，只能用于页面-->
+
+    <br>
+    <!--v-model 双向绑定 model和view,选中单选框 会添加到 lessons中 通过view影响model-->
+    <input type="checkbox" v-model="lessons" value="Java"/>Java<br>
+    <input type="checkbox" v-model="lessons" value="Python"/>Python<br>
+    <input type="checkbox" v-model="lessons" value="Ios"/>Ios<br>
+
+    <h1>
+        您已购买下列课程：{{lessons.join(",")}}
+    </h1>
+
+    <!--v-on:click/@click  可以操作方法js表达式、-->
+    <!--会产生冒泡  通过stop阻止冒泡-->
+    <div style="width: 100px;height:100px;background-color:green;" @click="print('div')">
+        div
+        <button @click.stop="print('button')"/>点我试试<!--</button>本来会输出div和button，添加了stop后只会输出button-->
+    </div>
+
+    <!--事件修饰符  prevent阻止页面跳转-->
+    <a href="http://www.baidu.com" @click.prevent="">百度一下</a>
+
+    <!--v-for循环遍历-->
+    <ul>
+        <li v-for="u in users">{{u.name+","+u.age+","+u.gender}}</li>
+        <li v-for="(u,i) in users">{{i+","+u.name+","+u.age+","+u.gender}}</li><br>
+        <!--取对象-->
+        <li v-for="u in users[0]">{{u}}</li>
+        <!--遍历数字-->
+        <li v-for="i in 5">{{i}}</li>
+
+        <!--:key 写唯一标识，这样当某一行数据发生改变 或者顺序改变，就知道是哪一行改变 不用从头重新遍历-->
+        <li v-for="(u,i) in users" :key="i">{{i+","+u.name+","+u.age+","+u.gender}}</li>
+    </ul>
+
+    <!--v-if  为true 会被渲染，动态切换-->
+    <button @click="show = ! show">点击切换</button><br>
+    <h1 v-if="show">
+        你好
+    </h1>
+    <br>
+
+    <!--v-else-->
+    <ul>
+        <li v-for="u in 5" v-if="u%2==0">偶数：{{u}}</li>
+        <li v-else>奇数：{{u}}</li>
+    </ul>
+
+    <!--v-show 修改样式为 disable，v-if直接让dom消失 更耗费性能-->
+
+    <!--v-bind 改变class  css？-->
+    <button @click="color='red'">红色</button>
+    <button @click="color='blue'">蓝色</button>
+    <div style="width:100px;height:100px; " :class="color">
+        我是盒子
+    </div>
+    <!--通过对象改变-->
+    <button @click="isred=!isred">点我切换</button>
+    <div style="width:100px;height:100px;" :class="{blue:!isred ,red:isred}">
+        我是盒子？？
+    </div>
+
+    <!--计算属性-->
+    <h1>
+        您的生日:{{birth}}
+    </h1>
+
+    <!--watch监控到值的变化,打印到console-->
+    <input type="text" v-model="text">
+    {{text}}
+    <!--watch深度监控，监控对象-->
+    {{person.name+","+person.age}}
+    <button type="button" @click="person.age++">改变对象的age</button>
+</div>
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+    const vm = new Vue({
+        el: "#app",
+        data:{
+            name: "",
+            msg:"信息",
+            lessons:[],  //数组
+            users:[
+                {name:'阿斯顿',age:'24',gender:"男"},
+                {name:'阿瓦达',age:'22',gender:"女"},
+                {name:'阿瓦蒂',age:'26',gender:"女"}
+            ],
+            show:true,
+            color:"red",
+            isred:true,
+            birthday:1624867289742,//毫秒值
+            text:"啦啦啦",
+            person:{
+                name:"阿斯顿",
+                age:"12"
+            }
+        },
+        computed:{//不是方法，而是属性
+            birth(){
+                const day = new Date(this.birthday);
+                return day.getFullYear()+"年"+day.getMonth()+"月"+day.getDay()+"日";
+            }
+        },
+        methods:{
+           print(msg){
+               console.log(msg);
+           }
+        },
+        created(){
+            this.name = "<font color='blue'>老王</font>";
+        },
+        watch:{
+            text(newVar,OldVar){
+                console.log(newVar,OldVar);
+            },
+            person:{
+                deep:true,
+                handler(val){
+                    console.log(val.age)
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

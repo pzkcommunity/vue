@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hello</title>
+</head>
+<body>
+<div id="app">
+    <button @click="handleClick">点我</button>
+    <input type="text" v-model="num"> <button @click="num++">+</button>
+    <h1>
+        {{name}} 很帅 <br>
+        {{num}}个
+    </h1>
+</div>
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+    const app = new Vue({
+        el:"#app",//element,vue作用的标签 只要div把所有都包含进去 就可以作用全局
+        data:{
+            name:"坤哥",
+            num:5,
+        },
+        methods:{
+            handleClick(){
+                alert("hello");
+                console.log(this);
+                console.log("hello!");
+            }
+        },
+        created(){
+            //调用任何属性和方法 都用this
+            this.name = "阿斯顿";
+        }
+    });
+</script>
+</body>
+</html>

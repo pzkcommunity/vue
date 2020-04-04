@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hello</title>
+</head>
+<body>
+<div id="app">
+    {{a}}
+</div>
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+    var data = { a : 1};//data变量 a的值为1
+
+    //vm.freeze();//freeze方法关闭了响应式布局
+
+    var vm = new Vue({
+        el:"#app",//element,vue作用的标签 只要div把所有都包含进去 就可以作用全局
+        data: data
+    });
+
+    data.a = "hi ...new ..."//通过data变量的值改变 对象 达到响应式的目的
+    data.a == vm.a;//data的a属性和 vm的a属性是一样的
+
+    vm.$data == data;
+
+    vm.$watch('a',function(newVal, oldVal) {//可以观察到a 新的值 和原始值
+        console.log(newVal,oldVal);
+    })
+
+    vm.$data.a = "test...";//通过$.属性方式 改a值
+
+
+</script>
+</body>
+</html>
