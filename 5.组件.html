@@ -5,6 +5,75 @@
     <title>Title</title>
 </head>
 <body>
+<div id="app">
+    <!--vue实例使用组件，通过组件的id 会有id对应的标签-->
+    <counter></counter>
+    <counter></counter>
+    <counter></counter>
 
+    <!--title的组件 v-bind渲染msg属性-->
+    <introduce :zidingyi="msg"></introduce>
+
+    <for-component :items="lessons"></for-component>
+    <for-component ></for-component>
+</div>
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+
+    //1. //vue全局组件，任何vue实例都可以使用这个组件   id，定义
+    // Vue.component("counter",{
+    //     //模板，但是只能有一个根标签
+    //     template:"<button @click='count++'>点我试试，我记住你了！,点了我{{count}}次了 </button>",
+    //     data(){     //要写方法  return返回
+    //         return{    //属性是所有 共享的 ，函数 通过return返回 count是一个局部变量 每次都是新的
+    //             count:0, //所以 用方法，不用属性 可以保证 组件的可复用，不能共享
+    //         }
+    //     }
+    // });
+
+    //2.局部组件,是一个变量,跟vue没有任何关系 ，声明到vue实例内部，当前实例可用
+    const counter = {
+        template:"<button @click='count++'>点我试试，我记住你了！,点了我{{count}}次了 </button>",
+        data(){
+            return{
+                count:0,
+            }
+        }
+    };
+
+    //3.组件间的通信：组件分为父子间和兄弟间两种。这里先了解父子间通信，兄弟间通信比较复杂需要vuex框架。
+    //父->子 间的通信
+    const introduce = {
+        template:" <h1>{{zidingyi}}</h1>",
+        props:['zidingyi']//父 通过props 向子 传递属性 ，接收vue的msg属性 通过组件introduce标签 内的 对应的zidingyi属性进行渲染msg
+        };
+    //循环
+    const forComponent = {
+        template:"<ul><li v-for='item in items'>{{item}}</li></ul>",
+        // props:['items']
+        props:{  //也可以传递对象，含有默认值  <for-component :items="lessons"></for-component> 没有:items="lessons"时
+            items:{
+                type:Array,
+                default:['java']
+            }
+        }
+    };
+
+
+    //vue实例
+    const app = new Vue({
+        el:"#app",
+        data:{
+            msg:"大家好，我是父 通过子组件传递渲染的信息",
+            lessons:['java','php','python']
+        },
+        components:{//局部组件
+            counter:counter,//组件名counter：选取变量counter为这个组件
+            introduce,//如果组件名和变量名相同 可以写一个
+            forComponent
+        }
+
+    });
+</script>
 </body>
 </html>
